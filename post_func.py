@@ -26,20 +26,23 @@ def print_request(r):
 
 
 def add_data(mass, air_task_id=0):
-	keys = ['Название', "Дедлайн", "Постановщик", "Ответсвенный", "Описание", "id", "Приоритет", "Статус"]
-	value = ['title', 'deadline', 'creator', 'responsible', 'description', 'id', 'priority', 'status']
+	dict = {'Название':'title',
+			"Дедлайн":'deadline',
+			"Постановщик":'creator',
+			"Ответсвенный":'responsible',
+			"Описание":'description',
+			"id":'id', "Приоритет":'priority',
+			"Статус":'status'}
 	fields = {}
-	j = 0
-	for i in keys:
-		if 1 < j < 4:
-			fields[i] = mass[value[j]]['name']
-		elif j == 1:
-			if mass[value[j]] != None:
+	for key,val in dict.items():
+		if val == 'creator' or val == 'responsible':
+			fields[key] = mass[val]['name']
+		elif val == 'deadline':
+			if mass[val] != None:
 				t = mass['deadline'].find('T')
-				fields[i] = mass[value[j]][:t]
+				fields[key] = mass[val][:t]
 		else:
-			fields[i] = mass[value[j]]
-		j += 1
+			fields[key] = mass[val]
 	data = {
 		"records": [{
 			"fields": fields}
@@ -79,5 +82,3 @@ def get_airtable(id, delete=False):
 	else:
 		push_task(int(id), 0)
 
-
-get_airtable(13243)
